@@ -1,4 +1,4 @@
-from letter_state import LetterState
+from Letter_state import LetterState
 
 
 class Wordle:
@@ -17,14 +17,19 @@ class Wordle:
     def guess(self, word: str):
         word = word.upper()
         result = []
+        counter = 0
 
         for i in range(self.WORD_LENGTH):
 
             character = word[i]
             letter = LetterState(character)
 
+            if word.count(character) > 2:
+                if self.secret.count(character) > 2:
+                    letter.is_in_word = character in self.secret
             if word.count(character) > 1:
-                if self.secret.count(character) > 1:
+                counter += 1
+                if self.secret.count(character) >= counter:
                     letter.is_in_word = character in self.secret
             else:
                 letter.is_in_word = character in self.secret

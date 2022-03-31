@@ -1,44 +1,26 @@
+import time
+
 from wordle_functions import *
-
-pygame.init()
-
-font = pygame.font.SysFont("Halvetica neue", 40)
-font_big = pygame.font.SysFont("Halvetica neue", 80)
-font_small = pygame.font.SysFont("free sans bold", 30)
-word_set = load_word_set("Data/full_wordlist.txt")
-secret = random.choice(word_set)
-
-you_win = font_big.render("You Win!", True, light_green)
-you_lose = font_big.render("You Lose...", True, red)
-play_again = font_big.render("Play Again?", True, blue)
-right_answer = font_big.render(secret + "...", True, light_green)
-
-height = 600
-width = 500
-fps = 30
-
-all_letters_font = font_small.render(ALPHABET, False, light_green)
-surface_of_all_letters = all_letters_font.get_rect(center=(width / 2, 25))
 
 
 def run_game():
-    #edit out
-    print(secret)
+    pygame.init()
+
+    word_set = load_word_set("Data/full_wordlist.txt")
+    secret = random.choice(word_set)
+    fonts = get_fonts()
+    prompts = get_prompts(fonts, secret)
 
     wordle = Wordle(secret)
     clock = pygame.time.Clock()
-    window = pygame.display.set_mode((width, height))
-
-    window.fill(black)
-
-    for x in range(Wordle.WORD_LENGTH):
-        for y in range(Wordle.MAX_ATTEMPTS):
-            pygame.draw.rect(window, grey, pygame.Rect(60 + (x * 80), 50 + (y * 80), 50, 50), 2)
-
     pygame.display.set_caption("Wordle!")
 
-    unused_letters = ALPHABET
+    window = pygame.display.set_mode((width, height))
+    window.fill(black)
+    draw_board(window)
+
     guess = ""
+    unused_letters = ALPHABET
 
     while True:
 
@@ -48,54 +30,47 @@ def run_game():
 
             if event.type == pygame.KEYDOWN:
                 guess += event.unicode.upper()
-                if event.key == pygame.K_BACKSPACE:
+
+                if event.key == K_BACKSPACE:
                     guess = guess[:-2]
 
                 if len(guess) > 5:
                     guess = guess[:-1]
 
-                if event.key == K_RETURN and wordle.is_solved:
-                    run_game()
-
-                if event.key == K_RETURN and len(wordle.attempts) == 6:
+                if event.key == K_RETURN and (wordle.is_solved or len(wordle.attempts) >= 6):
                     run_game()
 
                 if event.key == K_RETURN and len(guess) > 4:
                     if guess.upper() not in word_set:
-                        print("Word is not in list of valid words.")
+                        window.blit(prompts.get("invalid"), WINDOW_BOTTOM_RIGHT)
+                        pygame.display.update()
+                        time.sleep(1)
                         continue
 
                     wordle.attempt(guess)
                     unused_letters = determine_unused_letters(wordle.attempts)
-                    display_results(wordle, window, font)
+                    display_results(wordle, window, fonts.get("normal"))
                     guess = ""
 
-        window.fill(black, (0, 500, 500, 200))
-        window.fill(black, surface_of_all_letters)
+        prompts["unused"] = fonts.get("small").render(unused_letters, False, light_green)
+        prompts["guess"] = fonts.get("normal").render(guess, True, grey)
+        all_letters_surface = get_surface(prompts.get("abc"))
+        unused_letters_surface = get_surface(prompts.get("unused"))
 
-        unused_letters_font = font_small.render(unused_letters, False, light_green)
-        surface_of_unused_letters = unused_letters_font.get_rect(center=(width / 2, 25))
-        render_guess = font.render(guess, True, grey)
+        window.fill(black, WINDOW_BOTTOM)
+        window.fill(black, all_letters_surface)
 
-        window.blit(unused_letters_font, surface_of_unused_letters)
-        window.blit(render_guess, (180, 530))
+        window.blit(prompts.get("unused"), unused_letters_surface)
+        window.blit(prompts["guess"], WINDOW_TYPE_LOCATION)
 
         if wordle.is_solved:
-            window.blit(you_win, (108, 168))
-            window.blit(play_again, (75, 328))
+            window.blit(prompts.get("win"), WINDOW_ENDGAME_PROMPT)
+            window.blit(prompts.get("again"), WINDOW_AGAIN_PROMPT)
 
         if len(wordle.attempts) == 6 and not wordle.is_solved:
-            window.blit(you_lose, (108, 168))
-            window.blit(play_again, (75, 328))
-            window.blit(right_answer, (135, 520))
+            window.blit(prompts.get("lose"), WINDOW_ENDGAME_PROMPT)
+            window.blit(prompts.get("again"), WINDOW_AGAIN_PROMPT)
+            window.blit(prompts.get("secret"), WINDOW_BOTTOM_RIGHT)
 
         pygame.display.update()
         clock.tick(fps)
-
-
-
-
-
-
-
-
