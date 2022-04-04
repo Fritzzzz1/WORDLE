@@ -24,17 +24,25 @@ class Wordle:
             character = word[i]
             letter = LetterState(character)
 
-            if word.count(character) > 2:
-                if self.secret.count(character) > 2:
-                    letter.is_in_word = character in self.secret
             if word.count(character) > 1:
+                if word.count(character) > 2:
+                    if self.secret.count(character) > 2:
+                        letter.is_in_word = character in self.secret
                 counter += 1
                 if self.secret.count(character) >= counter:
                     letter.is_in_word = character in self.secret
+
             else:
                 letter.is_in_word = character in self.secret
 
             letter.is_in_position = (character == self.secret[i])
+
+            if letter.is_in_position:
+                letter.color = "green"
+
+            elif letter.is_in_word:
+                letter.color = "yellow"
+
             result.append(letter)
 
         return result

@@ -1,13 +1,14 @@
-import time
-
 from wordle_functions import *
 
 
-def run_game():
+def run_wordle_pygame():
     pygame.init()
 
     word_set = load_word_set("Data/full_wordlist.txt")
     secret = random.choice(word_set)
+
+    print(secret)
+
     fonts = get_fonts()
     prompts = get_prompts(fonts, secret)
 
@@ -15,8 +16,8 @@ def run_game():
     clock = pygame.time.Clock()
     pygame.display.set_caption("Wordle!")
 
-    window = pygame.display.set_mode((width, height))
-    window.fill(black)
+    window = pygame.display.set_mode((WIDTH, HEIGHT))
+    window.fill(BLACK)
     draw_board(window)
 
     guess = ""
@@ -26,7 +27,7 @@ def run_game():
 
         for event in pygame.event.get():
             if event.type == QUIT:
-                sys.exit()
+                exit(0)
 
             if event.type == pygame.KEYDOWN:
                 guess += event.unicode.upper()
@@ -38,13 +39,13 @@ def run_game():
                     guess = guess[:-1]
 
                 if event.key == K_RETURN and (wordle.is_solved or len(wordle.attempts) >= 6):
-                    run_game()
+                    run_wordle_pygame()
 
                 if event.key == K_RETURN and len(guess) > 4:
                     if guess.upper() not in word_set:
                         window.blit(prompts.get("invalid"), WINDOW_BOTTOM_RIGHT)
                         pygame.display.update()
-                        time.sleep(1)
+                        time.sleep(.8)
                         continue
 
                     wordle.attempt(guess)
@@ -52,13 +53,14 @@ def run_game():
                     display_results(wordle, window, fonts.get("normal"))
                     guess = ""
 
-        prompts["unused"] = fonts.get("small").render(unused_letters, False, light_green)
-        prompts["guess"] = fonts.get("normal").render(guess, True, grey)
+        prompts["unused"] = fonts.get("small").render(unused_letters, False, LIGHT_GREEN)
+        prompts["guess"] = fonts.get("normal").render(guess, True, GREY)
+
         all_letters_surface = get_surface(prompts.get("abc"))
         unused_letters_surface = get_surface(prompts.get("unused"))
 
-        window.fill(black, WINDOW_BOTTOM)
-        window.fill(black, all_letters_surface)
+        window.fill(BLACK, WINDOW_BOTTOM)
+        window.fill(BLACK, all_letters_surface)
 
         window.blit(prompts.get("unused"), unused_letters_surface)
         window.blit(prompts["guess"], WINDOW_TYPE_LOCATION)
@@ -74,3 +76,5 @@ def run_game():
 
         pygame.display.update()
         clock.tick(fps)
+
+
