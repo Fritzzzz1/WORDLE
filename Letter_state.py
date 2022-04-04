@@ -3,6 +3,4 @@ class LetterState:
         self.character: str = character
         self.is_in_word: bool = False
         self.is_in_position: bool = False
-        self.color: str = "grey"
-
-
+        self.color: str

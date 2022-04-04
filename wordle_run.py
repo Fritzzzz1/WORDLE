@@ -1,10 +1,17 @@
+import random
+import time
 from wordle_functions import *
+from pygame.locals import *
 
 
 def run_wordle_pygame():
     pygame.init()
 
     word_set = load_word_set("Data/full_wordlist.txt")
+    counter = 0
+    for word in word_set:
+        counter += 1
+    print(counter)
     secret = random.choice(word_set)
 
     print(secret)
@@ -76,5 +83,3 @@ def run_wordle_pygame():
 
         pygame.display.update()
         clock.tick(fps)
-
-

@@ -1,4 +1,6 @@
-from Header import *
+from Constants import *
+from Wordle import *
+import pygame
 
 
 def load_word_set(path: str):
@@ -52,6 +54,9 @@ def apply_color_to_result(result):
 
         elif letter.is_in_word:
             letter.color = YELLOW
+
+        else:
+            letter.color = GREY
 
 
 def display_results(wordle: Wordle, window, font):
