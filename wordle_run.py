@@ -8,13 +8,7 @@ def run_wordle_pygame():
     pygame.init()
 
     word_set = load_word_set("Data/full_wordlist.txt")
-    counter = 0
-    for word in word_set:
-        counter += 1
-    print(counter)
     secret = random.choice(word_set)
-
-    print(secret)
 
     fonts = get_fonts()
     prompts = get_prompts(fonts, secret)

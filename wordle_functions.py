@@ -1,5 +1,5 @@
 from Constants import *
-from Wordle import *
+from Wordle import Wordle
 import pygame
 
 
