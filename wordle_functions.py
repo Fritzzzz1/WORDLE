@@ -45,9 +45,19 @@ def draw_board(window):
                                          SQUARE_SIZE, SQUARE_SIZE), LINE_THICKNESS)
 
 
+def apply_color_to_result(result):
+    for letter in result:
+        if letter.is_in_position:
+            letter.color = GREEN
+
+        elif letter.is_in_word:
+            letter.color = YELLOW
+
+
 def display_results(wordle: Wordle, window, font):
     for word in wordle.attempts:
         result = wordle.guess(word)
+        apply_color_to_result(result)
         draw_guess(len(wordle.attempts) - 1, result, window, font)
 
 

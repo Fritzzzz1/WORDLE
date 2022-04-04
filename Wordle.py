@@ -37,12 +37,6 @@ class Wordle:
 
             letter.is_in_position = (character == self.secret[i])
 
-            if letter.is_in_position:
-                letter.color = "green"
-
-            elif letter.is_in_word:
-                letter.color = "yellow"
-
             result.append(letter)
 
         return result

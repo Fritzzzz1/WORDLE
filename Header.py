@@ -1,12 +1,10 @@
-
 import pygame
-import random
 from pygame.locals import *
+import random
 import time
-import keyboardlayout as kl
 from Wordle import *
 from typing import List
-
+# import keyboardlayout as kl
 
 WHITE = "white"
 YELLOW = "yellow"
