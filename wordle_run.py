@@ -77,3 +77,4 @@ def run_wordle_pygame():
 
         pygame.display.update()
         clock.tick(fps)
+

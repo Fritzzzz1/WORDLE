@@ -39,6 +39,7 @@ def draw_guess(attempts, result, window, font):
 
 
 def draw_board(window):
+
     for x in range(Wordle.WORD_LENGTH):
         for y in range(Wordle.MAX_ATTEMPTS):
             pygame.draw.rect(window, GREY,
@@ -48,6 +49,7 @@ def draw_board(window):
 
 
 def apply_color_to_result(result):
+
     for letter in result:
         if letter.is_in_position:
             letter.color = GREEN
@@ -60,6 +62,7 @@ def apply_color_to_result(result):
 
 
 def display_results(wordle: Wordle, window, font):
+
     for word in wordle.attempts:
         result = wordle.guess(word)
         apply_color_to_result(result)

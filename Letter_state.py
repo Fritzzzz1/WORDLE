@@ -4,3 +4,4 @@ class LetterState:
         self.is_in_word: bool = False
         self.is_in_position: bool = False
         self.color: str
+
